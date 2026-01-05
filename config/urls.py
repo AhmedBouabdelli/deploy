@@ -11,12 +11,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-# Optional: If you want to use DRF's built-in docs
-try:
-    from rest_framework.documentation import include_docs_urls
-    DRF_DOCS_AVAILABLE = True
-except ImportError:
-    DRF_DOCS_AVAILABLE = False
+
 
 # Health check endpoint
 from rest_framework.decorators import api_view, permission_classes
@@ -95,11 +90,7 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), 
          name='schema-redoc'),
     
-    # Optional: DRF built-in docs (if coreapi is installed)
-    *([path('api/docs/', include_docs_urls(
-        title='API Documentation',
-        permission_classes=[AllowAny]
-    ))] if DRF_DOCS_AVAILABLE else []),
+
     
     # Application URLs
     path('api/accounts/', include('apps.accounts.urls')),
