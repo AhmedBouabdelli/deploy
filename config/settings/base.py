@@ -3,6 +3,7 @@ Django settings for volunteer_platform project.
 """
 import os
 from pathlib import Path
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -94,19 +95,14 @@ if USE_LOCAL_DB:
     }
 else:
     # Deployed/Remote database configuration
+    # Use dj-database-url to parse Render's DATABASE_URL
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST'),
-            'PORT': os.getenv('DB_PORT', '5432'),
-            'OPTIONS': {
-                'sslmode': os.getenv('DB_SSLMODE', 'require'),
-                'channel_binding': os.getenv('DB_CHANNEL_BINDING', 'prefer'),
-            },
-        }
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        )
     }
 # PASSWORD_HASHERS
 PASSWORD_HASHERS = [
